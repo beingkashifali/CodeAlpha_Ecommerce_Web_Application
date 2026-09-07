@@ -1,7 +1,13 @@
 const express = require("express");
 const { body } = require("express-validator");
 const { authLimiter } = require("../middleware/rateLimiter");
-const { registerUser } = require("../controllers/authController");
+const {
+  registerUser,
+  loginUser,
+  logoutUser,
+  getMe,
+  updateProfile,
+} = require("../controllers/authController");
 const validateRequest = require("../middleware/validateRequest");
 
 const router = express.Router();
@@ -22,6 +28,30 @@ router.post(
   ],
   validateRequest,
   registerUser,
+);
+
+router.post(
+  "/login",
+  authLimiter,
+  [
+    body("email")
+      .isEmail()
+      .withMessage("Valid email required")
+      .normalizeEmail(),
+    body("password").notEmpty().withMessage("Password is required"),
+  ],
+  validateRequest,
+  loginUser,
+);
+
+router.post("/logout", logoutUser);
+router.get("/", protect, getMe);
+router.put(
+  "/profile",
+  protect,
+  [body("name").optional().trim().notEmpty(), body("phone").optional().trim()],
+  validateRequest,
+  updateProfile,
 );
 
 module.exports = router;

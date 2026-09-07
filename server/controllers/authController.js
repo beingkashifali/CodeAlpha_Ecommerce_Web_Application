@@ -1,5 +1,4 @@
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const generateTokenAndSetCookie = require("../utils/generateToken");
 
@@ -66,7 +65,7 @@ const loginUser = async (req, res, next) => {
       role: user.role,
     });
   } catch (error) {
-    next(err);
+    next(error);
   }
 };
 
@@ -82,4 +81,38 @@ const logoutUser = async (req, res, next) => {
   res.json({ message: "Logged out" });
 };
 
-module.exports = { registerUser, loginUser, logoutUsers };
+// @route GET /api/auth/me
+const getMe = async (req, res, next) => {
+  try {
+    res.json(req.user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @route PUT /api/auth/profile
+const updateProfile = async (req, res, next) => {
+  try {
+    const { name, phone, address } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (name) user.name = name;
+    if (phone !== undefined) user.phone = phone;
+    if (address) user.address = address;
+
+    const updated = await user.save();
+    res.json({
+      _id: updated._id,
+      name: updated.name,
+      email: updated.email,
+      phone: updated.phone,
+      address: updated.address,
+      role: updated.role,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { registerUser, loginUser, logoutUser, getMe, updateProfile };
