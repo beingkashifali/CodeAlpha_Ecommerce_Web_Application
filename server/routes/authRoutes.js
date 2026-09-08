@@ -8,6 +8,7 @@ const {
   getMe,
   updateProfile,
 } = require("../controllers/authController");
+const protect = require("../middleware/authMiddleware.js");
 const validateRequest = require("../middleware/validateRequest");
 
 const router = express.Router();
