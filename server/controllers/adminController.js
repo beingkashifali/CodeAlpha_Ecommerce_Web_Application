@@ -4,11 +4,36 @@ const Category = require("../models/Category");
 const Order = require("../models/Order");
 const User = require("../models/User");
 
+// ---------- Dashboard ----------
+
+// @route GET /api/admin/stats
+const getStats = async (req, res, next) => {
+  try {
+    const [totalProducts, totalCustomers, orders] = await Promise.all([
+      Product.countDocuments(),
+      User.countDocuments({ role: "customer" }),
+      Order.find(),
+    ]);
+
+    const totalOrders = orders.length;
+    const totalRevenue = orders
+      .filter((o) => o.paymentStatus === "paid" || o.paymentMethod === "COD")
+      .reduce((sum, o) => sum + o.totalPrice, 0);
+
+    const orderByStatus = orders.reduce((acc, o) => {
+      acc[o.orderStatus] = (acc[o.orderStatus] || 0) + 1;
+      return acc;
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // ---------- Products ----------
 
 // @route GET /api/admin/products
 
-const adminProducts = async (req, res, next) => {
+const getAdminProducts = async (req, res, next) => {
   try {
     const products = await Product.find()
       .populate("category", "name")
@@ -222,8 +247,31 @@ const getAdminUsers = async (req, res, next) => {
   }
 };
 
+// @route PUT /api/admin/users/:id  { role, isBlocked }
+const updateUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) res.status(404).json({ message: "User not found" });
+
+    const { role, isBlocked } = req.body;
+    if (role) user.role = role;
+    if (isBlocked !== undefined) user.isBlocked = isBlocked;
+    const updated = await user.save();
+
+    res.json({
+      _id: updated._id,
+      name: updated.name,
+      email: updated.email,
+      role: updated.role,
+      isBlocked: updated.isBlocked,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
-  adminProducts,
+  getAdminProducts,
   getAdminProductById,
   createProduct,
   updateProduct,
@@ -233,4 +281,5 @@ module.exports = {
   getAdminOrderById,
   updateOrderStatus,
   getAdminUsers,
+  updateUser,
 };
