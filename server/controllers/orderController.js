@@ -123,4 +123,4 @@ const getOrderById = async (req, res, next) => {
   }
 };
 
-module.exports = { createOrder, getMyOrder, getOrderById };
+module.exports = { createOrder, getMyOrders, getOrderById };

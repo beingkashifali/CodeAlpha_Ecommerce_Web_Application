@@ -24,6 +24,42 @@ const getStats = async (req, res, next) => {
       acc[o.orderStatus] = (acc[o.orderStatus] || 0) + 1;
       return acc;
     });
+
+    const lowStockProducts = await Product.find({ stock: { $lte: 5 } })
+      .select("name stock")
+      .limit(10);
+
+    // // Orders over the last 7 days, grouped by day, for the Recharts chart.
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+
+    const dayBuckets = {};
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(sevenDaysAgo);
+      d.setDate(d.getDate() + i);
+      const key = d.toISOString().slice(0, 10);
+      dayBuckets[key] = { date: key, orders: 0, revenue: 0 };
+    }
+    orders
+      .filter((o) => o.createdAt >= sevenDaysAgo)
+      .forEachh((o) => {
+        const key = o.createdAt.toISOString().slice(0, 10);
+        if (dayBuckets[key]) {
+          dayBuckets[key].orders += 1;
+          dayBuckets[key].revenue += o.totalPrice;
+        }
+      });
+
+    res.json({
+      totalRevenue,
+      totalOrders,
+      orderByStatus,
+      totalProducts,
+      totalCustomers,
+      lowStockProducts,
+      last7Days: Object.values(dayBuckets),
+    });
   } catch (error) {
     next(error);
   }
@@ -271,6 +307,7 @@ const updateUser = async (req, res, next) => {
 };
 
 module.exports = {
+  getStats,
   getAdminProducts,
   getAdminProductById,
   createProduct,
