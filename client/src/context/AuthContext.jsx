@@ -48,6 +48,11 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateProfile = async (payload) => {
+    const { data } = await axiosInstance.put("/auth/profile", payload);
+    setUser((prev) => ({ ...prev, ...data }));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -56,6 +61,7 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
+        updateProfile,
         refetch: fetchMe,
       }}
     >
