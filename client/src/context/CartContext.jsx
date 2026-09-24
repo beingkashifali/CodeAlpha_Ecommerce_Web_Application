@@ -15,7 +15,6 @@ const writeGuestCart = (items) =>
   localStorage.setItem(GUEST_CART_KEY, JSON.stringify(items));
 
 export const CartProvider = ({ children }) => {
-  const addToCart = async (product, quantity = 1) => {};
   return <CartContext.Provider value={{}}>{children}</CartContext.Provider>;
 };
 
