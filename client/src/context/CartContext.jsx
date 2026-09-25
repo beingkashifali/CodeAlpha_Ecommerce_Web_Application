@@ -3,17 +3,6 @@ import { createContext, useContext } from "react";
 const CartContext = createContext(null);
 const GUEST_CART_KEY = "guestCart";
 
-const readguestCart = () => {
-  try {
-    return JSON.parse(localStorage.getItem(GUEST_CART_KEY));
-  } catch {
-    return [];
-  }
-};
-
-const writeGuestCart = (items) =>
-  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(items));
-
 export const CartProvider = ({ children }) => {
   return <CartContext.Provider value={{}}>{children}</CartContext.Provider>;
 };
