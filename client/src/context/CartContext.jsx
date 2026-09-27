@@ -65,14 +65,46 @@ const CartProvider = async ({ children }) => {
       }
     };
     init();
-  }, [user, authLoading]);
+  }, [user, authLoading, fetchServerCart]);
 
-  //   const addToCart = async (product, quantity = 1) => {
-  //     if (user) {
-  //     }
-  //   };
+  const addToCart = async (product, quantity = 1) => {
+    if (user) {
+      const { data } = await axiosInstance.post("/cart", {
+        productId: product._id,
+        quantity,
+      });
+      setCartItems(data.items || []);
+    } else {
+      setCartItems((prev) => {
+        const existing = prev.find((i) => i.product_id === product._id);
+        let next;
+        if (existing) {
+          next = prev.map((i) =>
+            i.product._id === product._id
+              ? { ...i, quantity: i.quantity + quantity }
+              : i,
+          );
+        } else {
+          next = [...prev, { product, quantity }];
+        }
+        writeGuestCart(next);
+        return next;
+      });
+    }
+    toast.success(`${product.name} added to cart`);
+  };
 
-  return <CartContext.Provider value={{}}>{children}</CartContext.Provider>;
+  return (
+    <CartContext.Provider
+      value={{
+        cartItems,
+        loading,
+        addToCart,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 };
 
 const useCart = () => {
