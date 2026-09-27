@@ -94,12 +94,62 @@ const CartProvider = async ({ children }) => {
     toast.success(`${product.name} added to cart`);
   };
 
+  const updateQty = async (productId, quantity) => {
+    if (user) {
+      const { data } = axiosInstance.put(`/cart/${productId}`, { quantity });
+      setCartItems(data.items || []);
+    } else {
+      setCartItems((prev) => {
+        const next =
+          quantity <= 0
+            ? prev.filter((i) => i.product._id == productId)
+            : prev.map((i) =>
+                i.product._id === productId ? { ...i, quantity } : i,
+              );
+        writeGuestCart(next);
+        return next;
+      });
+    }
+  };
+
+  const removeFromCart = async (productId) => {
+    if (user) {
+      const { data } = await axiosInstance.delete(`/cart/${productId}`);
+      setCartItems(data.items || []);
+    } else {
+      setCartItems((prev) => {
+        const next = prev.filter((i) => i.product !== productId);
+        writeGuestCart(next);
+        return next;
+      });
+    }
+    toast.success("Removed from cart");
+  };
+
+  const clearCartLocal = () => {
+    setCartItems([]);
+    writeGuestCart([]);
+  };
+
+  const cartTotal = cartItems.reduce((sum, i) => {
+    const price = i.product.discountPrice ?? i.product.price;
+    return sum + price * i.quantity;
+  });
+
+  const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
+
   return (
     <CartContext.Provider
       value={{
         cartItems,
         loading,
         addToCart,
+        updateQty,
+        removeFromCart,
+        clearCartLocal,
+        cartTotal,
+        cartCount,
+        refetch: fetchServerCart,
       }}
     >
       {children}
