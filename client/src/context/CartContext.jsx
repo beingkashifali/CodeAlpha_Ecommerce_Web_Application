@@ -1,4 +1,5 @@
-import createContext, {
+import {
+  createContext,
   useCallback,
   useContext,
   useEffect,
@@ -22,15 +23,15 @@ const writeGuestCart = (items) => {
   localStorage.setItem(GUEST_CART_KEY, JSON.stringify(items));
 };
 
-const CartProvider = async ({ children }) => {
+const CartProvider = ({ children }) => {
   const { user, loading: authLoading } = useAuth();
   const [cartItems, setCartItems] = useState([]); // normalized: [{ product, quantity }]
   const [loading, setLoading] = useState(true);
 
   const fetchServerCart = useCallback(async () => {
-    const { data } = axiosInstance.get("/cart");
+    const { data } = await axiosInstance.get("/cart");
     setCartItems(data.items || []);
-  });
+  }, []);
 
   // On mount / whenever auth state resolves: load server cart if logged in,
   // otherwise fall back to the guest cart kept in localStorage.
@@ -118,7 +119,7 @@ const CartProvider = async ({ children }) => {
       setCartItems(data.items || []);
     } else {
       setCartItems((prev) => {
-        const next = prev.filter((i) => i.product !== productId);
+        const next = prev.filter((i) => i.product._id !== productId);
         writeGuestCart(next);
         return next;
       });
@@ -134,7 +135,7 @@ const CartProvider = async ({ children }) => {
   const cartTotal = cartItems.reduce((sum, i) => {
     const price = i.product.discountPrice ?? i.product.price;
     return sum + price * i.quantity;
-  });
+  }, 0);
 
   const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
 
@@ -160,6 +161,7 @@ const CartProvider = async ({ children }) => {
 const useCart = () => {
   const ctx = useContext(CartContext);
   if (!ctx) throw new Error("useCart must be used within CartProvider");
+  return ctx;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components

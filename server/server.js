@@ -20,13 +20,13 @@ const app = express();
 
 // Security middleware wired up from day one, not bolted on at the end.
 app.use(helmet());
-// app.use(
-//   cors({
-//     origin: process.env.CLIENT_URL || "http://localhost:5173",
-//     credentials: true,
-//   }),
-// );
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  }),
+);
+// app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 // app.use(mongoSanitize()); s// strips $ / . operators from req.body/query/params to block NoSQL injection
