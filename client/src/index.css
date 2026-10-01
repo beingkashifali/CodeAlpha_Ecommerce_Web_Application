@@ -1,39 +1,71 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* Brand */
+  --color-brand-50: #f2f7f4;
+  --color-brand-100: #dcece2;
+  --color-brand-200: #b8d9c6;
+  --color-brand-300: #8cbfa3;
+  --color-brand-400: #5c9d7c;
+  --color-brand-500: #3a7f5f;
+  --color-brand-600: #2a6449;
+  --color-brand-700: #1f4d38;
+  --color-brand-800: #193f2e;
+  --color-brand-900: #143327;
+
+  /* Maroon */
+  --color-maroon-500: #8a2c3b;
+  --color-maroon-600: #732433;
+  --color-maroon-700: #5c1c28;
+
+  --color-sale: #e0793e;
+
+  --font-heading: "Poppins", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  --shadow-card:
+    0 1px 2px rgba(15, 30, 24, 0.06), 0 4px 12px rgba(15, 30, 24, 0.06);
+}
 
 @layer base {
   html {
     scroll-behavior: smooth;
   }
+
   body {
     @apply font-body text-brand-900 bg-white antialiased;
   }
+
   h1,
   h2,
   h3,
   h4 {
     @apply font-heading;
   }
-  :focus-visible {
-    outline: 2px solid theme("colors.brand.500");
+
+  *:focus-visible {
+    outline: 2px solid var(--color-brand-500);
     outline-offset: 2px;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-md bg-brand-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-800 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-brand-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-800 disabled:cursor-not-allowed disabled:opacity-50;
   }
+
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 rounded-md border border-brand-700 px-5 py-2.5 text-sm font-medium text-brand-700 transition-colors hover:bg-brand-50 disabled:opacity-50;
   }
+
   .input {
     @apply w-full rounded-md border border-brand-200 px-3 py-2 text-sm text-brand-900 placeholder:text-brand-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500;
   }
+
   .label {
     @apply mb-1 block text-sm font-medium text-brand-800;
   }
+
   .card {
     @apply rounded-lg border border-brand-100 bg-white shadow-card;
   }
