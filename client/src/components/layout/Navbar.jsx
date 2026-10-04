@@ -33,10 +33,10 @@ const Navbar = () => {
   };
   return (
     <header className="sticky top-0 z-40 border-b border-brand-100 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center gap-4 px-6 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
         <Link
           to="/"
-          className="shrink-0 font-heading text-xl font-900 text-brand-700"
+          className="shrink-0 font-heading text-2xl font-900 text-brand-700 "
         >
           Bazaario
         </Link>
