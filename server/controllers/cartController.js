@@ -9,7 +9,7 @@ const getCart = async (req, res, next) => {
   try {
     let cart = await populateCart(Cart.findOne({ user: req.user._id }));
     if (!cart) {
-      cart = await new Cart.create({ user: req.user._id, items: [] });
+      cart = await Cart.create({ user: req.user._id, items: [] });
     }
     res.json(cart);
   } catch (error) {
@@ -50,7 +50,7 @@ const addToCart = async (req, res, next) => {
 // @route PUT /api/cart/:productId  { quantity }
 const updateCartItem = async (req, res, next) => {
   try {
-    const { quantity } = req.quantity;
+    const { quantity } = req.body;
     const cart = await Cart.findOne({ user: req.user._id });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 

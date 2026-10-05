@@ -14,7 +14,7 @@ const GUEST_CART_KEY = "guestCart";
 
 const readGuestCart = () => {
   try {
-    return JSON.parse(localStorage.getItem(GUEST_CART_KEY) || []);
+    return JSON.parse(localStorage.getItem(GUEST_CART_KEY) || "[]");
   } catch {
     return [];
   }
@@ -29,7 +29,7 @@ const CartProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchServerCart = useCallback(async () => {
-    const { data } = await axiosInstance.get("/cart");
+    const { data } = await axiosInstance.get("/cart/");
     setCartItems(data.items || []);
   }, []);
 
@@ -46,13 +46,13 @@ const CartProvider = ({ children }) => {
           if (guestItems.length > 0) {
             const { data } = await axiosInstance.post("/cart/merge", {
               items: guestItems.map((i) => ({
-                productId: i.product_id,
+                productId: i.product._id,
                 quantity: i.quantity,
               })),
             });
             setCartItems(data.items || []);
             localStorage.removeItem(GUEST_CART_KEY);
-            toast.success("Cart synced to your accoutn");
+            toast.success("Cart synced to your account");
           } else {
             await fetchServerCart();
           }
@@ -97,13 +97,15 @@ const CartProvider = ({ children }) => {
 
   const updateQty = async (productId, quantity) => {
     if (user) {
-      const { data } = axiosInstance.put(`/cart/${productId}`, { quantity });
+      const { data } = await axiosInstance.put(`/cart/${productId}`, {
+        quantity,
+      });
       setCartItems(data.items || []);
     } else {
       setCartItems((prev) => {
         const next =
           quantity <= 0
-            ? prev.filter((i) => i.product._id == productId)
+            ? prev.filter((i) => i.product._id !== productId)
             : prev.map((i) =>
                 i.product._id === productId ? { ...i, quantity } : i,
               );

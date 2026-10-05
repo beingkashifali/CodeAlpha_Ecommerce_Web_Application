@@ -46,7 +46,7 @@ router.post(
 );
 
 router.post("/logout", logoutUser);
-router.get("/", protect, getMe);
+router.get("/me", protect, getMe);
 router.put(
   "/profile",
   protect,

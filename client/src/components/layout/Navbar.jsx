@@ -89,7 +89,7 @@ const Navbar = () => {
                 onClick={handleLogout}
                 className="flex items-center gap-1 text-sm text-brand-500 hover:text-maroon-600"
               >
-                <LogOut className="h-4 w-4" />
+                <LogOut className="h-5 w-5" />
               </button>
             </div>
           ) : (
