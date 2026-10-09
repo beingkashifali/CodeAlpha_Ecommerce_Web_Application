@@ -64,13 +64,6 @@ const Home = () => {
       .finally(() => setLoading(false));
   }, [category, search, page]);
 
-  const activeCategory = categories.find((c) => c.slug === category);
-  const heading = search
-    ? `Search results for "${search}"`
-    : activeCategory
-      ? activeCategory.name
-      : "New Arrivals";
-
   return <div></div>;
 };
 
