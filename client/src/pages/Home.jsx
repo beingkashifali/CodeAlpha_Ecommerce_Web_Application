@@ -53,17 +53,6 @@ const Home = () => {
     }
   }, [category, search]);
 
-  useEffect(() => {
-    setLoading(true);
-    axiosInstance
-      .get("/products", { params: { category, search, page } })
-      .then(({ data }) => {
-        setProducts(data.products);
-        setPages(data.pages);
-      })
-      .finally(() => setLoading(false));
-  }, [category, search, page]);
-
   return <div></div>;
 };
 
