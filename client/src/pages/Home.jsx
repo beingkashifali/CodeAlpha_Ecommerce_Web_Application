@@ -39,20 +39,6 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
 
-  useEffect(() => {
-    axiosInstance
-      .get("/products/categories/all")
-      .then(({ data }) => setCategories(data));
-  }, []);
-
-  useEffect(() => {
-    if (!category && !search) {
-      axiosInstance
-        .get("/products", { params: { featured: true, limit: 8 } })
-        .then(({ data }) => setFeatured(data.products));
-    }
-  }, [category, search]);
-
   return <div></div>;
 };
 
