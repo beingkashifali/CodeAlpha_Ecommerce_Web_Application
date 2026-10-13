@@ -18,12 +18,21 @@ const categoryIcons = {
   home: HomeIcon,
 };
 
-
+const SkeletonCard = () => (
+  <div className="card overflow-hidden">
+    <div className="aspect-[4/5] w-full animate-pulse bg-brand-100" />
+    <div className="space-y-2 p-3">
+      <div className="h-3 w-3/4 animate-pulse rounded bg-brand-100" />
+      <div className="h-3 w-1/2 animate-pulse rounded bg-brand-100" />
+    </div>
+  </div>
+);
 
 const Home = () => {
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
   const search = searchParams.get("search");
+
   const [categories, setCategories] = useState([]);
   const [featured, setFeatured] = useState([]);
   const [products, setProducts] = useState([]);
