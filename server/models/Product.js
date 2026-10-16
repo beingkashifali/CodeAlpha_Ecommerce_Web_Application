@@ -23,11 +23,11 @@ const productSchema = new mongoose.Schema(
 
 productSchema.index({ name: "text", description: "text", brand: "text" });
 
-productSchema.pre("validate", function (next) {
+productSchema.pre("validate", function () {
   if (this.name && (!this.slug || this.isModified("name"))) {
     this.slug = `${slugify(this.name, { lower: true, strict: true })}-${Date.now().toString(36).slice(-5)}`;
   }
-  next();
+  // next();
 });
 
 module.exports = mongoose.model("Product", productSchema);

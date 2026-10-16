@@ -42,9 +42,11 @@ const Home = () => {
   const [pages, setPages] = useState(1);
 
   useEffect(() => {
-    axiosInstance
-      .get("/products/categories/all")
-      .then(({ data }) => setCategories(data));
+    axiosInstance.get("/products/categories/all").then(({ data }) => {
+      console.log(data.categories);
+      console.log(Array.isArray(data));
+      setCategories(data.categories);
+    });
   }, []);
 
   useEffect(() => {
