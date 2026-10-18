@@ -43,8 +43,6 @@ const Home = () => {
 
   useEffect(() => {
     axiosInstance.get("/products/categories/all").then(({ data }) => {
-      console.log(data.categories);
-      console.log(Array.isArray(data));
       setCategories(data.categories);
     });
   }, []);

@@ -15,7 +15,7 @@ import {
   Users,
   AlertTriangle,
 } from "lucide-react";
-import axiosInstance from "../api/axiosInstance";
+import axiosInstance from "../../api/axiosInstance";
 import StatCard from "../../components/admin/StatsCard";
 import { formatPKR } from "../../components/product/ProductCard";
 
@@ -34,6 +34,8 @@ const Dashboard = () => {
     ...d,
     label: new Date(d.date).toLocaleDateString("en-PK", { weekday: "short" }),
   }));
+
+  console.log(stats);
 
   return (
     <div>
