@@ -58,7 +58,7 @@ const Dashboard = () => {
         />
         <StatCard
           label="Total Products"
-          value={stats.totalProducts}
+          value={stats.totalProducts ?? 0}
           icon={Package}
           tone="brand"
         />

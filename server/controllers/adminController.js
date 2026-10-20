@@ -20,10 +20,10 @@ const getStats = async (req, res, next) => {
       .filter((o) => o.paymentStatus === "paid" || o.paymentMethod === "COD")
       .reduce((sum, o) => sum + o.totalPrice, 0);
 
-    const orderByStatus = orders.reduce((acc, o) => {
+    const ordersByStatus = orders.reduce((acc, o) => {
       acc[o.orderStatus] = (acc[o.orderStatus] || 0) + 1;
       return acc;
-    });
+    }, {});
 
     const lowStockProducts = await Product.find({ stock: { $lte: 5 } })
       .select("name stock")
@@ -43,7 +43,7 @@ const getStats = async (req, res, next) => {
     }
     orders
       .filter((o) => o.createdAt >= sevenDaysAgo)
-      .forEachh((o) => {
+      .forEach((o) => {
         const key = o.createdAt.toISOString().slice(0, 10);
         if (dayBuckets[key]) {
           dayBuckets[key].orders += 1;
@@ -54,7 +54,7 @@ const getStats = async (req, res, next) => {
     res.json({
       totalRevenue,
       totalOrders,
-      orderByStatus,
+      ordersByStatus,
       totalProducts,
       totalCustomers,
       lowStockProducts,

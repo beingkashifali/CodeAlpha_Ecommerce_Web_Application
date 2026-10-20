@@ -71,4 +71,17 @@ function App() {
   );
 }
 
+const NotFound = () => {
+  return (
+    <div className="mx-auto flex max-w-7xl flex-col items-center justify-center px-4 py-4 text-center">
+      <h1 className="font-heading text-3xl font-semibold text-brand-900">
+        Page not found
+      </h1>
+      <p className="mt-2 text-brand-500">
+        The page you're looking for doesn't exist.
+      </p>
+    </div>
+  );
+};
+
 export default App;
