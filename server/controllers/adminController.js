@@ -74,6 +74,8 @@ const getAdminProducts = async (req, res, next) => {
     const products = await Product.find()
       .populate("category", "name")
       .sort({ createdAt: -1 });
+
+    return res.status(200).json(products);
   } catch (error) {
     next(error);
   }
