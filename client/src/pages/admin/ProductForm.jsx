@@ -25,10 +25,30 @@ const ProductForm = () => {
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
 
+  // useEffect(() => {
+  // axiosInstance
+  //   .get("/products/categories/all")
+  //   .then(({ data }) => setCategories(data));
+  // }, []);
+
   useEffect(() => {
     axiosInstance
       .get("/products/categories/all")
-      .then(({ data }) => setCategories(data));
+      .then(({ data }) => {
+        if (Array.isArray(data)) {
+          setCategories(data);
+        } else if (Array.isArray(data.categories)) {
+          setCategories(data.categories);
+        } else {
+          setCategories([]);
+          console.error("Unexpected categories API response:", data);
+        }
+      })
+      .catch((err) => {
+        setCategories([]);
+        toast.error(err.response?.data?.message || "Failed to load categories");
+        console.error("Categories fetch error:", err);
+      });
   }, []);
 
   useEffect(() => {
@@ -157,6 +177,7 @@ const ProductForm = () => {
               required
               min="0"
               name="stock"
+              className="input"
               value={form.stock}
               onChange={handleChange}
             />
@@ -167,6 +188,7 @@ const ProductForm = () => {
               type="text"
               required
               name="brand"
+              className="input"
               value={form.brand}
               onChange={handleChange}
             />
