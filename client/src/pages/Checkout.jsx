@@ -44,6 +44,34 @@ const Checkout = () => {
   });
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [submitting, setSubmitting] = useState(false);
+
+  const validateAddress = () =>
+    address.street.trim() &&
+    address.city.trim() &&
+    address.province.trim() &&
+    address.phone.trim();
+
+  const handlePlaceOrder = async () => {
+    setSubmitting(true);
+    try {
+      const items = cartItems.map((i) => ({
+        productId: i.product._id,
+        quantity: i.quantity,
+      }));
+      const { data } = await axiosInstance.post("/orders", {
+        items,
+        shippingAddress: address,
+        paymentMethod,
+      });
+      clearCartLocal();
+      toast.success("Order placed successfully!");
+      navigate("/account", { state: { newOrderId: data._id } });
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Could not place order");
+    } finally {
+      setSubmitting(false);
+    }
+  };
   return <div></div>;
 };
 
