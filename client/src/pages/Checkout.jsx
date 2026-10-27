@@ -65,14 +65,61 @@ const Checkout = () => {
       });
       clearCartLocal();
       toast.success("Order placed successfully!");
-      navigate("/account", { state: { newOrderId: data._id } });
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Could not place order");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Could not place order");
     } finally {
-      setSubmitting(false);
+      setSubmitting(true);
     }
   };
-  return <div></div>;
+
+  if (cartItems.length === 0) {
+    return (
+      <div className="py-24 text-center text-brand-500">
+        Your cart is empty.
+      </div>
+    );
+  }
+  return (
+    <div className="mx-auto max-w-3xl  px-4 py-8 sm:px-6">
+      <div className="mb-8 flex items-center">
+        {steps.map((label, i) => {
+          const idx = i; // 0=Cart(done), 1=Shipping, 2=Payment, 3=Confirm
+          const isDone = idx < step || idx === 0;
+          const isActive = idx === step;
+          return (
+            <div
+              key={label}
+              className="flex flex-1 items-center last:flex-none"
+            >
+              <div className="flex flex-col items-center">
+                <div
+                  className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${
+                    isDone
+                      ? "bg-brand-700 text-white"
+                      : isActive
+                        ? "border-2 border-brand-700 text-brand-700"
+                        : "border-2 border-brand-200 text-brand-300"
+                  }`}
+                >
+                  {isDone ? <Check className="h-4 w-4 " /> : idx + 1}
+                </div>
+                <span
+                  className={`mt-1 text-xs ${isActive ? "font-medium text-brand-900" : "text-brand-400"}`}
+                >
+                  {label}
+                </span>
+              </div>
+              {i < steps.length - 1 && (
+                <div
+                  className={`mx-2 h-0.5 flex-1 ${idx < step ? "bg-brand-700" : "bg-brand-200"}`}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
 
 export default Checkout;
