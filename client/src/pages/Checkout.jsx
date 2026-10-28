@@ -51,6 +51,12 @@ const Checkout = () => {
     address.province.trim() &&
     address.phone.trim();
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setAddress((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handlePlaceOrder = async () => {
     setSubmitting(true);
     try {
@@ -118,6 +124,67 @@ const Checkout = () => {
           );
         })}
       </div>
+
+      {step === 1 && (
+        <div className="card p-6">
+          <h2 className="mb-4 font-heading text-lg font-medium text-brand-900">
+            Shipping Address
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <label className="label">Street Address</label>
+              <input
+                type="text"
+                className="input"
+                name="street"
+                value={address.street}
+                onChange={handleChange}
+                placeholder="House 12, Street 4, Model Town"
+              />
+            </div>
+            <div>
+              <label className="label">City</label>
+              <input
+                className="input"
+                name="city"
+                value={address.city}
+                onChange={handleChange}
+                placeholder="Lahore"
+              />
+            </div>
+            <div>
+              <label className="label">Province</label>
+              <input
+                className="input"
+                name="province"
+                value={address.province}
+                onChange={handleChange}
+                placeholder="Punjab"
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="label">Phone number</label>
+              <input
+                className="input"
+                name="phone"
+                value={address.phone}
+                onChange={handleChange}
+                placeholder="03001234567"
+              />
+            </div>
+          </div>
+          <button
+            onClick={() =>
+              validateAddress()
+                ? setStep(2)
+                : toast.error("Please fill in all shipping fields")
+            }
+            className="btn-primary mt-6 w-full py-3"
+          >
+            Continue to Payment
+          </button>
+        </div>
+      )}
     </div>
   );
 };
