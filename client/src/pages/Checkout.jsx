@@ -185,6 +185,121 @@ const Checkout = () => {
           </button>
         </div>
       )}
+
+      {step === 2 && (
+        <div className="card p-6">
+          <h2 className="mb-4 font-heading text-lg font-semibold text-brand-900">
+            Payment Method
+          </h2>
+          <div className="space-y-3">
+            {paymentOptions.map(({ value, label, icon: Icon, desc }) => (
+              <label
+                key={value}
+                className={`flex cursor-pointer items-center gap-3 rounded-md border p-3 ${
+                  paymentMethod === value
+                    ? "border-brand-700 bg-brand-50"
+                    : "border-brand-200"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="payment"
+                  value={value}
+                  checked={paymentMethod === value}
+                  onChange={() => setPaymentMethod(value)}
+                  className="accent-brand-700"
+                />
+                <Icon className="h-5 w-5 text-brand-700" />
+                <div>
+                  <p className="text-sm font-medium text-brand-900">{label}</p>
+                  <p className="text-xs text-brand-500">{desc}</p>
+                </div>
+              </label>
+            ))}
+          </div>
+          {paymentMethod !== "COD" && (
+            <p className="mt-3 text-xs text-brand-500">
+              You'll be redirected to a secure {paymentMethod} sandbox page
+              after placing the order (test mode).
+            </p>
+          )}
+          <div className="mt-6 flex gap-3">
+            <button
+              onClick={() => setStep(1)}
+              className="btn-secondary flex-1 py-3"
+            >
+              Back
+            </button>
+            <button
+              onClick={() => setStep(3)}
+              className="btn-primary flex-1 py-3"
+            >
+              Review Order
+            </button>
+          </div>
+        </div>
+      )}
+
+      {step === 3 && (
+        <div className="card p-6">
+          <h2 className="mb-4 font-heading text-lg font-semibold text-brand-900">
+            Review &amp; Confirm
+          </h2>
+
+          <div className="mb-4 space-y-2 divide-y divide-brand-100">
+            {cartItems.map(({ product, quantity }) => (
+              <div
+                key={product._id}
+                className="flex justify-between py-2 text-sm"
+              >
+                <span className="text-brand-700">
+                  {product.name} × {quantity}
+                </span>
+                <span className="font-medium text-brand-900">
+                  {formatPKR(
+                    (product.discountPrice ?? product.price) * quantity,
+                  )}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="mb-4 rounded-md bg-brand-50 p-3 text-sm text-brand-700">
+            <p className="font-medium text-brand-900">Shipping to:</p>
+            <p>
+              {address.street}, {address.city}, {address.province}
+            </p>
+            <p>{address.phone}</p>
+          </div>
+
+          <div className="mb-4 rounded-md bg-brand-50 p-3 text-sm text-brand-700">
+            <p className="font-medium text-brand-900">Payment method:</p>
+            <p>
+              {paymentOptions.find((p) => p.value === paymentMethod)?.label}
+            </p>
+          </div>
+          <div className="flex justify-between border-t border-brand-100 pt-4 font-semibold text-brand-900">
+            <span>Total</span>
+            <span>{formatPKR(cartTotal)}</span>
+          </div>
+
+          <div className="mt-6 flex gap-3">
+            <button
+              onClick={() => setStep(2)}
+              className="btn-secondary flex-1 py-3"
+            >
+              Back
+            </button>
+            <button
+              onClick={handlePlaceOrder}
+              disabled={submitting}
+              className="btn-primary flex-1 py-3"
+            >
+              {submitting ? "Placing order..." : "Place Order"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
