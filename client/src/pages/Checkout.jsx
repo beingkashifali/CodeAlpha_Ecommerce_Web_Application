@@ -71,6 +71,7 @@ const Checkout = () => {
       });
       clearCartLocal();
       toast.success("Order placed successfully!");
+      navigate("/account", { state: { newOrderId: data._id } });
     } catch (error) {
       toast.error(error.response?.data?.message || "Could not place order");
     } finally {
@@ -179,7 +180,7 @@ const Checkout = () => {
                 ? setStep(2)
                 : toast.error("Please fill in all shipping fields")
             }
-            className="btn-primary mt-6 w-full py-3"
+            className="btn-primary mt-6 w-full py-3 cursor-pointer"
           >
             Continue to Payment
           </button>
@@ -226,13 +227,13 @@ const Checkout = () => {
           <div className="mt-6 flex gap-3">
             <button
               onClick={() => setStep(1)}
-              className="btn-secondary flex-1 py-3"
+              className="btn-secondary flex-1 py-3 cursor-pointer"
             >
               Back
             </button>
             <button
               onClick={() => setStep(3)}
-              className="btn-primary flex-1 py-3"
+              className="btn-primary flex-1 py-3 cursor-pointer"
             >
               Review Order
             </button>
@@ -286,14 +287,14 @@ const Checkout = () => {
           <div className="mt-6 flex gap-3">
             <button
               onClick={() => setStep(2)}
-              className="btn-secondary flex-1 py-3"
+              className="btn-secondary flex-1 py-3 cursor-pointer"
             >
               Back
             </button>
             <button
               onClick={handlePlaceOrder}
               disabled={submitting}
-              className="btn-primary flex-1 py-3"
+              className="btn-primary flex-1 py-3 cursor-pointer"
             >
               {submitting ? "Placing order..." : "Place Order"}
             </button>
