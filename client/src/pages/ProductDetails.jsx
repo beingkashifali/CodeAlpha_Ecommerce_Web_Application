@@ -13,6 +13,32 @@ const ProductDetails = () => {
   const [qty, setQty] = useState(1);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
+    axiosInstance
+      .get(`/products/${slug}`)
+      .then(({ data }) => {
+        (setData(data), setQty(1));
+      })
+      .finally(() => setLoading(false));
+  }, [slug]);
+
+  if (loading) {
+    return <div className="py-24 text-center text-brand-500">Loading...</div>;
+  }
+
+  if (!data) {
+    return (
+      <div className="py-24 text-center text-brand-500">Product not found.</div>
+    );
+  }
+
+  const { product, related } = data;
+  const hasDiscount =
+    product.discountPrice && product.discountPrice < product.price;
+  const outOfStock = product.stock <= 0;
+
   return <div></div>;
 };
 
