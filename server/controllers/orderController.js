@@ -56,7 +56,7 @@ const createOrder = async (req, res, next) => {
         quantity: reqItem.quantity,
       });
 
-      const unitPrice = product.discountPrice ?? product.unitPrice;
+      const unitPrice = product.discountPrice ?? product.price;
       totalPrice += unitPrice * reqItem.quantity;
 
       orderItems.push({

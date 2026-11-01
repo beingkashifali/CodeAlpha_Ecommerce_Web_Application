@@ -75,7 +75,7 @@ const Checkout = () => {
     } catch (error) {
       toast.error(error.response?.data?.message || "Could not place order");
     } finally {
-      setSubmitting(true);
+      setSubmitting(false);
     }
   };
 
