@@ -35,8 +35,6 @@ const Dashboard = () => {
     label: new Date(d.date).toLocaleDateString("en-PK", { weekday: "short" }),
   }));
 
-  console.log(stats);
-
   return (
     <div>
       <h1 className="mb-6 font-heading text-2xl font-semibold text-brand-900">
