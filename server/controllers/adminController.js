@@ -267,20 +267,33 @@ const updateOrderStatus = async (req, res, next) => {
 const getAdminUsers = async (req, res, next) => {
   try {
     const users = await User.find().select("-password").sort({ createdAt: -1 });
+
     const orderCounts = await Order.aggregate([
-      { $group: { $_id: "$user", count: { $sum: 1 } } },
+      {
+        $match: {
+          user: { $exists: true, $ne: null },
+        },
+      },
+      {
+        $group: {
+          _id: "$user",
+          count: { $sum: 1 },
+        },
+      },
     ]);
+
     const countMap = Object.fromEntries(
-      orderCounts.map((o) => [o._id.toString(), o.count]),
+      orderCounts.map((order) => [order._id.toString(), order.count]),
     );
 
-    const result = users.map((u) => ({
-      ...u.toObject(),
-      orderCount: countMap[u._id.toString()] || 0,
+    const result = users.map((user) => ({
+      ...user.toObject(),
+      orderCount: countMap[user._id.toString()] || 0,
     }));
 
-    res.json(result);
+    return res.status(200).json(result);
   } catch (error) {
+    console.error("getAdminUsers error:", error);
     next(error);
   }
 };

@@ -20,6 +20,14 @@ const Cart = () => {
 
   if (loading) {
     return (
+      <div className="py-24 text-center text-brand-500">
+        Loading your cart...
+      </div>
+    );
+  }
+
+  if (cartItems.length === 0) {
+    return (
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 py-24 text-center">
         <ShoppingBag className="h-12 w-12 text-brand-300" />
         <h1 className="font-heading text-xl font-semibold text-brand-900">
@@ -33,10 +41,6 @@ const Cart = () => {
         </Link>
       </div>
     );
-  }
-
-  if (cartItems.length === 0) {
-    return <div></div>;
   }
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
